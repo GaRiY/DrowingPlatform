@@ -1,6 +1,7 @@
 var cord = [];
 var newcords = [];
 var Connected = false;
+var socket;
 
 function setup() {
     createCanvas(1000,1000);
@@ -10,33 +11,27 @@ function setup() {
 function mouseDragged(){
     ellipse(mouseX,mouseY,20,20);
     newcords.push([mouseX,mouseY]);
-    console.log(newcords);
+	console.log(newcords);
+	socket.emit("send message",newcords);
   }
 
 function draw(){
 	if(Connected){
 		Connected = false;
-		console.log("cord.length");
-		ellipse(cord[0],cord[1],20,20);
+		for(var i in cord)
+		ellipse(cord[i][0],cord[i][1],20,20);
 	}
 }
 
 function main() {
-    var socket = io();
+    socket = io();
 	socket.on("display message",function(data){
+		if(cord != data)
     	cord = data;
-    	console.log(cord);
     	if(cord.length != 0)
     	Connected = true;
     })
-    socket.on("display message 2",function(data){
-    	for(var i in data) {
-	        	cords = data[i];
-	        	if(cord.length != 0)
-    			Connected = true;
-	    }
-    })
-    socket.emit("send message",newcords);
+    
 
 
 }

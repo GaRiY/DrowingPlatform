@@ -11,15 +11,14 @@ app.get('/', function (req, res) {
 server.listen(3000);
 
 io.on('connection', function (socket) {
-    for(var i in cords) {
-      socket.emit("display message", cords[i]);
-    }
+      socket.emit("display message", cords);
+    
 
     socket.on("send message", function (data) {
-    	console.log(data,data[1]);
+    	console.log(data,cords);
 	    	for(var i in data) {
 	        	cords.push(data[i]);
 	    	}
-        io.sockets.emit("display message 2", data);
+        io.sockets.emit("display message", data);
     });
  });
